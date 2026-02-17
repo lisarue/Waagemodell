@@ -3,10 +3,82 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Test-Test</title>
+    <title>Three Hearts</title>
+    <style>
+      body {
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        display: grid;
+        place-items: center;
+        min-height: 100vh;
+        margin: 0;
+        background: #fafafa;
+      }
+
+      .wrap {
+        text-align: center;
+      }
+
+      .hearts {
+        display: flex;
+        gap: 28px;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 18px;
+      }
+
+      button.heart {
+        font-size: 64px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        line-height: 1;
+        padding: 10px 12px;
+        border-radius: 16px;
+        transition: transform 120ms ease, background 120ms ease;
+      }
+
+      button.heart:hover {
+        transform: translateY(-2px) scale(1.05);
+        background: rgba(0, 0, 0, 0.04);
+      }
+
+      button.heart:active {
+        transform: translateY(0) scale(0.98);
+      }
+
+      .msg {
+        font-size: 22px;
+        min-height: 1.6em; /* damit’s nicht “springt” */
+      }
+    </style>
   </head>
+
   <body>
-    <h1>Hello GitHub 👋</h1>
-    <p>Mein erstes Repo mit Code.</p>
+    <div class="wrap">
+      <div class="hearts">
+        <button class="heart" id="redHeart" aria-label="Red heart" style="color: #e11d48;">
+          ♥
+        </button>
+
+        <button class="heart" aria-label="Green heart" style="color: #16a34a;">
+          ♥
+        </button>
+
+        <button class="heart" aria-label="Blue heart" style="color: #2563eb;">
+          ♥
+        </button>
+      </div>
+
+      <div class="msg" id="message"></div>
+    </div>
+
+    <script>
+      const redHeart = document.getElementById("redHeart");
+      const message = document.getElementById("message");
+
+      redHeart.addEventListener("click", () => {
+        message.textContent = "Be my Valentine";
+      });
+    </script>
   </body>
 </html>
