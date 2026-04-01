@@ -5,10 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Waagemodell – Lineare Gleichungen</title>
   <style>
+    html,
+    body {
+      min-width: max-content;
+      overflow-x: auto;
+    }
+
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      padding: 32px;
+      padding: 24px;
       background: #fafafa;
       color: #222;
     }
@@ -16,14 +22,19 @@
     h1 {
       margin: 0 0 32px 0;
       text-align: center;
+      width: 1460px;
+      max-width: none;
     }
 
     .app {
       display: flex;
-      gap: 36px;
+      flex-wrap: nowrap;
+      gap: 24px;
       align-items: flex-start;
-      justify-content: center;
-      flex-wrap: wrap;
+      justify-content: flex-start;
+      width: max-content;
+      min-width: 1460px;
+      margin: 0;
     }
 
     .visual-area {
@@ -31,15 +42,21 @@
       border: 1px solid #ddd;
       border-radius: 16px;
       padding: 32px;
-      min-width: 860px;
+      width: 1060px;
+      min-width: 1060px;
       box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+      box-sizing: border-box;
+      flex: 0 0 1060px;
     }
 
     .right-column {
       display: flex;
       flex-direction: column;
       gap: 24px;
-      width: 430px;
+      width: 360px;
+      min-width: 360px;
+      max-width: 360px;
+      flex: 0 0 360px;
     }
 
     .symbolic-area,
@@ -98,7 +115,7 @@
     }
 
     .beam {
-      width: 460px;
+      width: 620px;
       height: 12px;
       background: #333;
       border-radius: 6px;
@@ -117,10 +134,11 @@
 
     .plates-row {
       width: 100%;
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(2, 280px);
       justify-content: center;
       gap: 90px;
-      align-items: flex-start;
+      align-items: start;
       margin-top: 10px;
     }
 
@@ -128,8 +146,10 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      width: 300px;
+      width: 280px;
+      max-width: 280px;
       gap: 14px;
+      min-width: 0;
     }
 
     .plate-label {
@@ -138,8 +158,9 @@
     }
 
     .plate {
-      width: 280px;
-      min-height: 250px;
+      width: 260px;
+      max-width: 260px;
+      min-height: 230px;
       border: 2px solid #444;
       border-radius: 14px;
       background: #f5f5f5;
@@ -148,7 +169,7 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
-      gap: 24px;
+      gap: 28px;
     }
 
     .element-row {
@@ -162,10 +183,12 @@
 
     .box-row {
       padding-top: 8px;
+      padding-bottom: 8px;
     }
 
     .ball-row {
-      padding-top: 6px;
+      padding-top: 16px;
+      border-top: 1px dashed #cfd6e3;
     }
 
     .group-grid {
@@ -262,20 +285,75 @@
       font-weight: bold;
     }
 
+    .setup-area {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    .setup-title {
+      margin: 0 0 14px 0;
+      font-size: 20px;
+    }
+
+    .setup-note {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #555;
+      margin-bottom: 18px;
+    }
+
+    .setup-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 16px;
+    }
+
+    .setup-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .setup-collapsed .setup-content {
+      display: none;
+    }
+
+    .setup-collapsed {
+      padding-bottom: 16px;
+    }
+
+    .step-locked {
+      opacity: 0.45;
+      pointer-events: none;
+      user-select: none;
+    }
+
     .controls {
       display: flex;
-      gap: 24px;
+      gap: 16px;
       flex-wrap: wrap;
       justify-content: center;
-      margin-top: 42px;
+      margin-top: 28px;
     }
 
     .control-group {
       background: #f8f8f8;
       border: 1px solid #ddd;
       border-radius: 12px;
-      padding: 18px;
-      min-width: 280px;
+      padding: 16px;
+      min-width: 240px;
+      flex: 1 1 240px;
+      max-width: 320px;
     }
 
     .control-group h3 {
@@ -390,35 +468,8 @@
       line-height: 1.6;
     }
 
-    @media (max-width: 1280px) {
-      .visual-area {
-        min-width: unset;
-        width: 100%;
-      }
-
-      .right-column {
-        width: 100%;
-      }
-    }
 
     @media (max-width: 950px) {
-      .beam {
-        width: 320px;
-      }
-
-      .plates-row {
-        gap: 30px;
-      }
-
-      .plate-column {
-        width: 190px;
-      }
-
-      .plate {
-        width: 180px;
-        min-height: 220px;
-      }
-
       .step-equation-line {
         flex-direction: column;
         align-items: flex-start;
@@ -461,7 +512,52 @@
       <div id="status" class="status"></div>
       <div id="feedback" class="feedback">Noch keine Aktion durchgeführt.</div>
 
-      <div class="controls">
+      <div id="setupArea" class="setup-area">
+        <div class="setup-header-row">
+          <h3 class="setup-title" style="margin:0;">(1) Gleichung festlegen</h3>
+          <button id="setupToggleBtn" class="action-btn" onclick="toggleSetupArea()">Klein machen</button>
+        </div>
+        <div class="setup-content">
+        <div class="setup-note">
+          Lege die Gleichung mit denselben Arten von Änderungen fest, die du später auch beim Verändern verwendest.
+          Während der Festlegung wird die Waage noch nicht als Gleichgewichtsprüfung verwendet. Zugelassen werden nur natürliche Zahlen
+          und nur Gleichungen mit positiver natürlicher Lösung.
+        </div>
+
+        <div class="controls" style="margin-top: 0;">
+          <div class="control-group">
+            <h3>Nur eine Seite verändern</h3>
+            <div class="button-row">
+              <button class="action-btn" onclick="changeSetupSide('left','box',1)">+ Box links</button>
+              <button class="action-btn" onclick="changeSetupSide('left','box',-1)">− Box links</button>
+              <button class="action-btn" onclick="changeSetupSide('left','ball',1)">+ Kugel links</button>
+              <button class="action-btn" onclick="changeSetupSide('left','ball',-1)">− Kugel links</button>
+            </div>
+            <div class="button-row" style="margin-top:10px;">
+              <button class="action-btn" onclick="changeSetupSide('right','box',1)">+ Box rechts</button>
+              <button class="action-btn" onclick="changeSetupSide('right','box',-1)">− Box rechts</button>
+              <button class="action-btn" onclick="changeSetupSide('right','ball',1)">+ Kugel rechts</button>
+              <button class="action-btn" onclick="changeSetupSide('right','ball',-1)">− Kugel rechts</button>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <h3>Festlegung</h3>
+            <div class="button-row">
+              <button class="action-btn" onclick="clearSetupEquation()">Festlegung leeren</button>
+              <button class="action-btn" onclick="applyEquationSetup()">Gleichung festlegen</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <div id="interactionControls" class="controls step-locked">
+        <div class="control-group" style="min-width: 100%; max-width: 780px;">
+          <h3>(2) Gleichung verändern</h3>
+          <div class="empty-note">Schritt (2) wird freigeschaltet, sobald eine gültige Gleichung festgelegt wurde.</div>
+        </div>
+
         <div class="control-group">
           <h3>Nur eine Seite verändern</h3>
           <div class="button-row">
@@ -540,12 +636,14 @@
   </div>
 
   <script>
-    const initialState = {
+    const defaultInitialState = {
       left: { boxes: 1, balls: 2 },
       right: { boxes: 0, balls: 6 }
     };
 
+    let initialState = deepClone(defaultInitialState);
     let state = deepClone(initialState);
+    let setupState = deepClone(defaultInitialState);
     let history = [];
     let future = [];
     let symbolicVisible = true;
@@ -554,6 +652,9 @@
     let pendingOperations = [];
     let groupPreviewDivisor = null;
     let feedbackState = { type: "", message: "Noch keine Aktion durchgeführt." };
+    let equationFixed = false;
+    let setupCollapsed = false;
+    let fixedEquationSolution = getSolvedXFromState(initialState) || 1;
 
     function deepClone(obj) {
       return JSON.parse(JSON.stringify(obj));
@@ -609,6 +710,132 @@
       return Number(document.getElementById("divisorSelect").value);
     }
 
+    function isSetupNonNegativeChange(side, kind, delta) {
+      const key = kind === "box" ? "boxes" : "balls";
+      return setupState[side][key] + delta >= 0;
+    }
+
+    function changeSetupSide(side, kind, delta) {
+      if (equationFixed) {
+        setFeedback("warning", "Die Gleichung ist bereits festgelegt. Verwende zum Neufestlegen zuerst „Festlegung leeren“.");
+        renderFeedback();
+        return;
+      }
+
+      if (!isSetupNonNegativeChange(side, kind, delta)) {
+        setFeedback("error", "Diese Aktion ist nicht möglich. Es sind nur natürliche Zahlen darstellbar.");
+        renderFeedback();
+        return;
+      }
+
+      const key = kind === "box" ? "boxes" : "balls";
+      setupState[side][key] += delta;
+      setFeedback("", "");
+      render();
+    }
+
+    function clearSetupEquation() {
+      setupState = {
+        left: { boxes: 0, balls: 0 },
+        right: { boxes: 0, balls: 0 }
+      };
+      equationFixed = false;
+      setupCollapsed = false;
+      initialState = deepClone(defaultInitialState);
+      fixedEquationSolution = getSolvedXFromState(initialState) || 1;
+      state = deepClone(setupState);
+      history = [];
+      future = [];
+      savedSteps = [];
+      pendingOperations = [];
+      groupPreviewDivisor = null;
+      setFeedback("warning", "Die Festlegung wurde geleert.");
+      render();
+    }
+
+    function hasValidPositiveNaturalSolution(candidateState) {
+      const coefficient = candidateState.left.boxes - candidateState.right.boxes;
+      const constant = candidateState.right.balls - candidateState.left.balls;
+
+      if (coefficient === 0) return false;
+      if (constant % coefficient !== 0) return false;
+
+      const solution = constant / coefficient;
+      return Number.isInteger(solution) && solution > 0;
+    }
+
+    function getSolvedXFromState(stateObject) {
+      const coefficient = stateObject.left.boxes - stateObject.right.boxes;
+      const constant = stateObject.right.balls - stateObject.left.balls;
+
+      if (coefficient === 0) return null;
+      if (constant % coefficient !== 0) return null;
+
+      const solution = constant / coefficient;
+      return solution > 0 ? solution : null;
+    }
+
+    function applyEquationSetup() {
+      const candidateState = deepClone(setupState);
+
+      if (!hasValidPositiveNaturalSolution(candidateState)) {
+        setFeedback("error", "Bitte lege eine Gleichung mit positiver natürlicher Lösung fest.");
+        renderFeedback();
+        return;
+      }
+
+      initialState = deepClone(candidateState);
+      fixedEquationSolution = getSolvedXFromState(initialState) || 1;
+      state = deepClone(candidateState);
+      history = [];
+      future = [];
+      savedSteps = [];
+      pendingOperations = [];
+      groupPreviewDivisor = null;
+      equationFixed = true;
+      setupCollapsed = true;
+
+      setFeedback("success", `Gleichung festgelegt: ${fullEquationText(state)}.`);
+      render();
+    }
+
+    function ensureEquationFixed() {
+      if (equationFixed) return true;
+      setFeedback("warning", "Lege zuerst in Schritt (1) eine gültige Gleichung fest.");
+      render();
+      return false;
+    }
+
+    function toggleSetupArea() {
+      setupCollapsed = !setupCollapsed;
+      updateSetupAreaUI();
+    }
+
+    function updateSetupAreaUI() {
+      const setupArea = document.getElementById("setupArea");
+      const toggleBtn = document.getElementById("setupToggleBtn");
+      if (!setupArea || !toggleBtn) return;
+
+      if (setupCollapsed) {
+        setupArea.classList.add("setup-collapsed");
+        toggleBtn.textContent = "Groß machen";
+      } else {
+        setupArea.classList.remove("setup-collapsed");
+        toggleBtn.textContent = "Klein machen";
+      }
+    }
+
+    function updateInteractionAvailability() {
+      const controls = document.getElementById("interactionControls");
+      if (!controls) return;
+
+      if (equationFixed) {
+        controls.classList.remove("step-locked");
+      } else {
+        controls.classList.add("step-locked");
+      }
+    }
+
     function isNonNegativeChange(side, kind, delta) {
       const key = kind === "box" ? "boxes" : "balls";
       return state[side][key] + delta >= 0;
@@ -619,12 +846,14 @@
     }
 
     function clearGroupPreview() {
+      if (!ensureEquationFixed()) return;
       groupPreviewDivisor = null;
       setFeedback("warning", "Die Gruppierungsvorschau wurde gelöscht.");
       render();
     }
 
     function changeOneSide(side, kind, delta) {
+      if (!ensureEquationFixed()) return;
       if (!isNonNegativeChange(side, kind, delta)) {
         setFeedback("error", "Diese Aktion ist nicht möglich. Es sind nur natürliche Zahlen darstellbar.");
         render();
@@ -679,6 +908,7 @@
     }
 
     function previewDivision() {
+      if (!ensureEquationFixed()) return;
       const n = getDivisor();
 
       if (!canPreviewDivideBy(n)) {
@@ -700,6 +930,7 @@
     }
 
     function applyDivision() {
+      if (!ensureEquationFixed()) return;
       const n = groupPreviewDivisor || getDivisor();
 
       if (!canPreviewDivideBy(n)) {
@@ -731,6 +962,7 @@
     }
 
     function undo() {
+      if (!ensureEquationFixed()) return;
       if (history.length === 0) return;
       future.push(snapshot());
       const previous = history.pop();
@@ -739,6 +971,7 @@
     }
 
     function redo() {
+      if (!ensureEquationFixed()) return;
       if (future.length === 0) return;
       history.push(snapshot());
       const next = future.pop();
@@ -747,6 +980,7 @@
     }
 
     function resetModel() {
+      if (!ensureEquationFixed()) return;
       pushHistory();
       state = deepClone(initialState);
       pendingOperations = [];
@@ -775,15 +1009,22 @@
     }
 
     function computeDemoWeight(sideData) {
-      const assumedX = 4;
-      return sideData.boxes * assumedX + sideData.balls;
+      return sideData.boxes * fixedEquationSolution + sideData.balls;
     }
 
     function renderStatus() {
-      const leftWeight = computeDemoWeight(state.left);
-      const rightWeight = computeDemoWeight(state.right);
       const beam = document.getElementById("beam");
       const status = document.getElementById("status");
+
+      if (!equationFixed) {
+        beam.style.transform = "rotate(0deg)";
+        status.textContent = "⚖️ Beim Festlegen wird die Waage neutral dargestellt";
+        status.className = "status balanced";
+        return;
+      }
+
+      const leftWeight = computeDemoWeight(state.left);
+      const rightWeight = computeDemoWeight(state.right);
 
       if (leftWeight === rightWeight) {
         beam.style.transform = "rotate(0deg)";
@@ -808,7 +1049,8 @@
     }
 
     function renderEquation() {
-      document.getElementById("equation").textContent = fullEquationText(state);
+      const displayState = equationFixed ? state : setupState;
+      document.getElementById("equation").textContent = fullEquationText(displayState);
     }
 
     function createBox() {
@@ -928,6 +1170,7 @@
     }
 
     function saveStep() {
+      if (!ensureEquationFixed()) return;
       const operationText = savedSteps.length === 0 ? "" : summarizePendingOperations();
 
       savedSteps.push({
@@ -943,6 +1186,7 @@
     }
 
     function clearSavedSteps() {
+      if (!ensureEquationFixed()) return;
       savedSteps = [];
       pendingOperations = [];
       setFeedback("warning", "Die Liste der Zwischenschritte wurde geleert.");
@@ -951,6 +1195,7 @@
     }
 
     function loadSavedStep(index) {
+      if (!ensureEquationFixed()) return;
       pushHistory();
       state = deepClone(savedSteps[index].state);
       groupPreviewDivisor = null;
@@ -1009,14 +1254,19 @@
     }
 
     function render() {
-      renderPlate("leftPlate", state.left);
-      renderPlate("rightPlate", state.right);
+      const displayState = equationFixed ? state : setupState;
+      renderPlate("leftPlate", displayState.left);
+      renderPlate("rightPlate", displayState.right);
       renderStatus();
       renderFeedback();
       renderEquation();
       renderSavedSteps();
+      updateInteractionAvailability();
+      updateSetupAreaUI();
     }
 
+    setFeedback("warning", "Lege zuerst in Schritt (1) eine Gleichung fest.");
+    state = deepClone(setupState);
     render();
   </script>
 </body>
